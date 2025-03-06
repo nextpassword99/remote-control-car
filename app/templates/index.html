@@ -131,6 +131,27 @@
         document.querySelector(".text").textContent = intensity;
       });
 
+      leftRight.addEventListener("input", () => {
+        const intensity = leftRight.value;
+        document.querySelector(".text").textContent = intensity;
+      });
+
+      function processForwardBackward(intensity) {
+        if (intensity > 0) {
+          moveForward(intensity);
+        } else if (intensity < 0) {
+          moveBackward(intensity);
+        }
+      }
+
+      function processLeftRight(intensity) {
+        if (intensity > 0) {
+          moveRight(intensity);
+        } else if (intensity < 0) {
+          moveLeft(intensity);
+        }
+      }
+
       function moveForward(intensity) {}
       function moveBackward(intensity) {}
       function moveLeft(intensity) {}
