@@ -28,12 +28,10 @@ void setup()
     }
     Serial.println(WiFi.localIP());
 
-    int intensity = server.arg("value").toInt();
-
-    server.on("/forward", HTTP_GET, handleMoveForward(intensity));
-    server.on("/backward", HTTP_GET, handleMoveBackward(intensity));
-    server.on("/left", HTTP_GET, handleMoveLeft(intensity));
-    server.on("/right", HTTP_GET, handleMoveRight(intensity));
+    server.on("/forward", HTTP_GET, handleMoveForward);
+    server.on("/backward", HTTP_GET, handleMoveBackward);
+    server.on("/left", HTTP_GET, handleMoveLeft);
+    server.on("/right", HTTP_GET, handleMoveRight);
 
     server.begin();
 }
@@ -43,32 +41,36 @@ void loop()
     server.handleClient();
 }
 
-void handleMoveForward(int intensity)
+void handleMoveForward()
 {
+    int intensity = server.arg("value").toInt();
     ledIntensity(ledForward, intensity);
     server.send(200, "text/plain", "Moving forward");
 }
 
-void handleMoveBackward(int intensity)
+void handleMoveBackward()
 {
-    ledIntensity(ledForward, intensity);
+    int intensity = server.arg("value").toInt();
+    ledIntensity(ledBackward, intensity);
     server.send(200, "text/plain", "Moving backward");
 }
 
-void handleMoveLeft(int intensity)
+void handleMoveLeft()
 {
-    ledIntensity(ledForward, intensity);
+    int intensity = server.arg("value").toInt();
+    ledIntensity(ledLeft, intensity);
     server.send(200, "text/plain", "Moving left");
 }
 
-void handleMoveRight(int intensity)
+void handleMoveRight()
 {
-    ledIntensity(ledForward, intensity);
+    int intensity = server.arg("value").toInt();
+    ledIntensity(ledRight, intensity);
     server.send(200, "text/plain", "Moving right");
 }
 
 void ledIntensity(int pin, int intensity)
 {
-    intensity = constrain(intensity, 0, 250);
+    intensity = constrain(intensity, 0, 255);
     analogWrite(pin, intensity);
 }
