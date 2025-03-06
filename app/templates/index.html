@@ -123,6 +123,8 @@
     </main>
 
     <script>
+      const HOST = "http://192.168.100.234";
+
       const forwardBackward = document.querySelector(".forward-backward");
       const leftRight = document.querySelector(".left-right");
 
@@ -164,13 +166,13 @@
 
       function processSendMovement(intensity, type) {
         if (type == "forward") {
-          sendRequest(`http://192.168.1.4:80/forward?value=${intensity}`);
+          sendRequest(`${HOST}/forward?value=${intensity}`);
         } else if (type == "backward") {
-          sendRequest(`http://192.168.1.4:80/backward?value=${intensity}`);
+          sendRequest(`${HOST}/backward?value=${intensity}`);
         } else if (type == "left") {
-          sendRequest(`http://192.168.1.4:80/left?value=${intensity}`);
+          sendRequest(`${HOST}/left?value=${intensity}`);
         } else if (type == "right") {
-          sendRequest(`http://192.168.1.4:80/right?value=${intensity}`);
+          sendRequest(`${HOST}/right?value=${intensity}`);
         }
       }
     </script>
