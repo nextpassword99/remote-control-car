@@ -45,6 +45,7 @@ void handleMoveForward()
 {
     int intensity = server.arg("value").toInt();
     ledIntensity(ledForward, intensity);
+    ledIntensity(ledBackward, 0);
     server.send(200, "text/plain", "Moving forward");
 }
 
@@ -52,6 +53,7 @@ void handleMoveBackward()
 {
     int intensity = server.arg("value").toInt();
     ledIntensity(ledBackward, intensity);
+    ledIntensity(ledForward, 0);
     server.send(200, "text/plain", "Moving backward");
 }
 
@@ -59,6 +61,7 @@ void handleMoveLeft()
 {
     int intensity = server.arg("value").toInt();
     ledIntensity(ledLeft, intensity);
+    ledIntensity(ledRight, 0);
     server.send(200, "text/plain", "Moving left");
 }
 
@@ -66,6 +69,7 @@ void handleMoveRight()
 {
     int intensity = server.arg("value").toInt();
     ledIntensity(ledRight, intensity);
+    ledIntensity(ledLeft, 0);
     server.send(200, "text/plain", "Moving right");
 }
 
