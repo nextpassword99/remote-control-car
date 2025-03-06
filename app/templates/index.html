@@ -140,16 +140,16 @@
 
       function processControl(intensity, sides = false) {
         if (!sides) {
-          if (intensity > 0) {
+          if (intensity >= 0) {
             processSendMovement(intensity, "forward");
-          } else if (intensity < 0) {
-            processSendMovement(intensity, "backward");
+          } else if (intensity <= 0) {
+            processSendMovement(intensity * -1, "backward");
           }
         } else {
-          if (intensity > 0) {
+          if (intensity >= 0) {
             processSendMovement(intensity, "right");
-          } else if (intensity < 0) {
-            processSendMovement(intensity, "left");
+          } else if (intensity <= 0) {
+            processSendMovement(intensity * -1, "left");
           }
         }
       }
