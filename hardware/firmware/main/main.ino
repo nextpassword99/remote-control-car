@@ -13,10 +13,20 @@ int ledRight = 5;
 
 void setup()
 {
+    Serial.begin(115200);
+    WiFi.begin(ssid, password);
+
     pinMode(ledForward, OUTPUT);
     pinMode(ledBackward, OUTPUT);
     pinMode(ledRight, OUTPUT);
     pinMode(ledLeft, OUTPUT);
+
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(1000);
+        Serial.print(".");
+    }
+    Serial.println(WiFi.localIP());
 
     server.on("/forward", HTTP_GET, handleMoveForward);
     server.on("/backward", HTTP_GET, handleMoveBackward);
