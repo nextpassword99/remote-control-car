@@ -1,6 +1,9 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
+const char *ssid = "System32";
+const char *password = "edisonp21";
+
 WebServer server(80);
 
 int ledForward = 2;
