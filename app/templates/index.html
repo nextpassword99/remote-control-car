@@ -129,13 +129,13 @@
       forwardBackward.addEventListener("input", () => {
         const intensity = forwardBackward.value;
         document.querySelector(".text").textContent = intensity;
-        processForwardBackward(intensity);
+        processControl(intensity);
       });
 
       leftRight.addEventListener("input", () => {
         const intensity = leftRight.value;
         document.querySelector(".text").textContent = intensity;
-        processLeftRight(intensity, true);
+        processControl(intensity, true);
       });
 
       function processControl(intensity, sides = false) {
@@ -167,13 +167,10 @@
           sendRequest(`http://192.168.1.4:80/forward?value=${intensity}`);
         } else if (type == "backward") {
           sendRequest(`http://192.168.1.4:80/backward?value=${intensity}`);
-          moveBackward(intensity);
         } else if (type == "left") {
           sendRequest(`http://192.168.1.4:80/left?value=${intensity}`);
-          moveLeft(intensity);
         } else if (type == "right") {
           sendRequest(`http://192.168.1.4:80/right?value=${intensity}`);
-          moveRight(intensity);
         }
       }
     </script>
