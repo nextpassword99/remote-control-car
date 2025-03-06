@@ -43,20 +43,24 @@ void loop()
 
 void handleMoveForward()
 {
-    digitalWrite(ledForward, HIGHT)
+    digitalWrite(ledForward, HIGH);
+    server.send(200, "text/plain", "Moving forward");
 }
 
 void handleMoveBackward()
 {
-    digitalWrite(ledBackward, HIGHT)
+    digitalWrite(ledBackward, HIGH);
+    server.send(200, "text/plain", "Moving backward");
 }
 
 void handleMoveLeft()
 {
-    digitalWrite(ledLeft, HIGHT)
+    digitalWrite(ledLeft, HIGH);
+    server.send(200, "text/plain", "Moving left");
 }
 
 void handleMoveRight()
 {
-    digitalWrite(ledRight, HIGHT)
+    digitalWrite(ledRight, HIGH);
+    server.send(200, "text/plain", "Moving right");
 }
