@@ -129,33 +129,53 @@
       forwardBackward.addEventListener("input", () => {
         const intensity = forwardBackward.value;
         document.querySelector(".text").textContent = intensity;
+        processForwardBackward(intensity);
       });
 
       leftRight.addEventListener("input", () => {
         const intensity = leftRight.value;
         document.querySelector(".text").textContent = intensity;
+        processLeftRight(intensity, true);
       });
 
-      function processForwardBackward(intensity) {
-        if (intensity > 0) {
-          moveForward(intensity);
-        } else if (intensity < 0) {
+      function processControl(intensity, sides = false) {
+        if (!sides) {
+          if (intensity > 0) {
+            processSendMovement(intensity, "forward");
+          } else if (intensity < 0) {
+            processSendMovement(intensity, "backward");
+          }
+        } else {
+          if (intensity > 0) {
+            processSendMovement(intensity, "right");
+          } else if (intensity < 0) {
+            processSendMovement(intensity, "left");
+          }
+        }
+      }
+
+      function sendRequest(url) {
+        return fetch(url, {
+          method: "GET",
+        })
+          .then((res) => res.text())
+          .then((res) => console.log(res));
+      }
+
+      function processSendMovement(intensity, type) {
+        if (type == "forward") {
+          sendRequest(`http://192.168.1.4:80/forward?value=${intensity}`);
+        } else if (type == "backward") {
+          sendRequest(`http://192.168.1.4:80/backward?value=${intensity}`);
           moveBackward(intensity);
-        }
-      }
-
-      function processLeftRight(intensity) {
-        if (intensity > 0) {
-          moveRight(intensity);
-        } else if (intensity < 0) {
+        } else if (type == "left") {
+          sendRequest(`http://192.168.1.4:80/left?value=${intensity}`);
           moveLeft(intensity);
+        } else if (type == "right") {
+          sendRequest(`http://192.168.1.4:80/right?value=${intensity}`);
+          moveRight(intensity);
         }
       }
-
-      function moveForward(intensity) {}
-      function moveBackward(intensity) {}
-      function moveLeft(intensity) {}
-      function moveRight(intensity) {}
     </script>
   </body>
 </html>
