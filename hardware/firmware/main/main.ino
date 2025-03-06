@@ -15,12 +15,12 @@ void setup()
     pinMode(ledRight, OUTPUT);
     pinMode(ledLeft, OUTPUT);
 
-    server.on("forward", handleMoveForward);
-    server.on("backward", handleMoveBackward);
-    server.on("left", handleMoveLeft);
-    server.on("right", handleMoveRight);
+    server.on("/forward", HTTP_GET, handleMoveForward);
+    server.on("/backward", HTTP_GET, handleMoveBackward);
+    server.on("/left", HTTP_GET, handleMoveLeft);
+    server.on("/right", HTTP_GET, handleMoveRight);
 
-    server.begin()
+    server.begin();
 }
 
 void loop()
