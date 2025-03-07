@@ -4,3 +4,5 @@ lib64
 include/
 bin/
 etc/
+Scripts/
+pyvenv.cfg
