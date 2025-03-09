@@ -53,6 +53,10 @@ void setupPins()
     pinMode(motorA_IN1, OUTPUT);
     pinMode(motorA_IN2, OUTPUT);
     pinMode(motorA_ENA, OUTPUT);
+
+    pinMode(motorB_IN1, OUTPUT);
+    pinMode(motorB_IN2, OUTPUT);
+    pinMode(motorB_ENA, OUTPUT);
 }
 
 void setupWebServer()
@@ -69,7 +73,7 @@ void handleMoveForward()
     setLed(ledForward, intensity);
     setLed(ledBackward, 0);
 
-    moveMotor(HIGH, LOW, intensity, false);
+    moveMotorForwardBackward(HIGH, LOW, intensity, false);
 
     server.send(200, "text/plain", "Moving forward");
 }
@@ -80,7 +84,7 @@ void handleMoveBackward()
     setLed(ledBackward, intensity);
     setLed(ledForward, 0);
 
-    moveMotor(LOW, HIGH, intensity, false);
+    moveMotorForwardBackward(LOW, HIGH, intensity, false);
 
     server.send(200, "text/plain", "Moving backward");
 }
@@ -112,7 +116,7 @@ void setLed(int pin, int intensity)
     analogWrite(pin, intensity);
 }
 
-void moveMotor(int in1State, int in2State, int speed, bool sides)
+void moveMotorForwardBackward(int in1State, int in2State, int speed, bool sides)
 {
     speed = map(speed, 0, 255, 0, 400); // ? Definir en 400 para mejor control
 
@@ -121,5 +125,9 @@ void moveMotor(int in1State, int in2State, int speed, bool sides)
         digitalWrite(motorA_IN1, in1State);
         digitalWrite(motorA_IN2, in2State);
         analogWrite(motorA_ENA, speed);
+
+        digitalWrite(motorB_IN1, in1State);
+        digitalWrite(motorB_IN2, in2State);
+        analogWrite(motorB_ENA, speed);
     }
 }
