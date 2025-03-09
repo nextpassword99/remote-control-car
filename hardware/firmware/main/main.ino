@@ -69,11 +69,7 @@ void handleMoveForward()
     setLed(ledForward, intensity);
     setLed(ledBackward, 0);
 
-    int speed = map(intensity, 0, 255, 0, 1023);
-
-    digitalWrite(motorA_IN1, HIGH);
-    digitalWrite(motorA_IN2, LOW);
-    analogWrite(motorA_ENA, speed);
+    moveMotor(HIGH, LOW, intensity, false);
 
     server.send(200, "text/plain", "Moving forward");
 }
@@ -84,11 +80,7 @@ void handleMoveBackward()
     setLed(ledBackward, intensity);
     setLed(ledForward, 0);
 
-    int speed = map(intensity, 0, 255, 0, 1023);
-
-    digitalWrite(motorA_IN1, LOW);
-    digitalWrite(motorA_IN2, HIGH);
-    analogWrite(motorA_ENA, speed);
+    moveMotor(LOW, HIGH, intensity, false);
 
     server.send(200, "text/plain", "Moving backward");
 }
@@ -117,6 +109,17 @@ int getIntensity()
 
 void setLed(int pin, int intensity)
 {
-    intensity = constrain(intensity, 0, 255);
     analogWrite(pin, intensity);
+}
+
+void moveMotor(int in1State, int in2State, int speed, bool sides)
+{
+    speed = map(speed, 0, 255, 0, 400); // ? Definir en 400 para mejor control
+
+    if (!sides)
+    {
+        digitalWrite(motorA_IN1, in1State);
+        digitalWrite(motorA_IN2, in2State);
+        analogWrite(motorA_ENA, speed);
+    }
 }
