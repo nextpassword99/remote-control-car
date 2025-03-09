@@ -66,8 +66,8 @@ void setupWebServer()
 void handleMoveForward()
 {
     int intensity = server.arg("value").toInt();
-    ledIntensity(ledForward, intensity);
-    ledIntensity(ledBackward, 0);
+    setLed(ledForward, intensity);
+    setLed(ledBackward, 0);
 
     int speed = map(intensity, 0, 255, 0, 1023);
 
@@ -81,8 +81,8 @@ void handleMoveForward()
 void handleMoveBackward()
 {
     int intensity = server.arg("value").toInt();
-    ledIntensity(ledBackward, intensity);
-    ledIntensity(ledForward, 0);
+    setLed(ledBackward, intensity);
+    setLed(ledForward, 0);
 
     int speed = map(intensity, 0, 255, 0, 1023);
 
@@ -96,20 +96,20 @@ void handleMoveBackward()
 void handleMoveLeft()
 {
     int intensity = server.arg("value").toInt();
-    ledIntensity(ledLeft, intensity);
-    ledIntensity(ledRight, 0);
+    setLed(ledLeft, intensity);
+    setLed(ledRight, 0);
     server.send(200, "text/plain", "Moving left");
 }
 
 void handleMoveRight()
 {
     int intensity = server.arg("value").toInt();
-    ledIntensity(ledRight, intensity);
-    ledIntensity(ledLeft, 0);
+    setLed(ledRight, intensity);
+    setLed(ledLeft, 0);
     server.send(200, "text/plain", "Moving right");
 }
 
-void ledIntensity(int pin, int intensity)
+void setLed(int pin, int intensity)
 {
     intensity = constrain(intensity, 0, 255);
     analogWrite(pin, intensity);
