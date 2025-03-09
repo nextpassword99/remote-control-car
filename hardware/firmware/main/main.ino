@@ -18,8 +18,33 @@ int motorA_ENA = 14;
 void setup()
 {
     Serial.begin(115200);
+    connectionWiFi();
+
+    setupPins();
+    setupWebServer();
+
+    server.begin();
+}
+
+void loop()
+{
+    server.handleClient();
+}
+
+void connectionWiFi()
+{
     WiFi.begin(ssid, password);
 
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        delay(1000);
+        Serial.print(".");
+    }
+    Serial.println(WiFi.localIP());
+}
+
+void setupPins()
+{
     pinMode(ledForward, OUTPUT);
     pinMode(ledBackward, OUTPUT);
     pinMode(ledRight, OUTPUT);
@@ -28,25 +53,14 @@ void setup()
     pinMode(motorA_IN1, OUTPUT);
     pinMode(motorA_IN2, OUTPUT);
     pinMode(motorA_ENA, OUTPUT);
+}
 
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(1000);
-        Serial.print(".");
-    }
-    Serial.println(WiFi.localIP());
-
+void setupWebServer()
+{
     server.on("/forward", HTTP_GET, handleMoveForward);
     server.on("/backward", HTTP_GET, handleMoveBackward);
     server.on("/left", HTTP_GET, handleMoveLeft);
     server.on("/right", HTTP_GET, handleMoveRight);
-
-    server.begin();
-}
-
-void loop()
-{
-    server.handleClient();
 }
 
 void handleMoveForward()
