@@ -65,7 +65,7 @@ void setupWebServer()
 
 void handleMoveForward()
 {
-    int intensity = server.arg("value").toInt();
+    int intensity = getIntensity();
     setLed(ledForward, intensity);
     setLed(ledBackward, 0);
 
@@ -80,7 +80,7 @@ void handleMoveForward()
 
 void handleMoveBackward()
 {
-    int intensity = server.arg("value").toInt();
+    int intensity = getIntensity();
     setLed(ledBackward, intensity);
     setLed(ledForward, 0);
 
@@ -95,7 +95,7 @@ void handleMoveBackward()
 
 void handleMoveLeft()
 {
-    int intensity = server.arg("value").toInt();
+    int intensity = getIntensity();
     setLed(ledLeft, intensity);
     setLed(ledRight, 0);
     server.send(200, "text/plain", "Moving left");
@@ -103,10 +103,16 @@ void handleMoveLeft()
 
 void handleMoveRight()
 {
-    int intensity = server.arg("value").toInt();
+    int intensity = getIntensity();
     setLed(ledRight, intensity);
     setLed(ledLeft, 0);
     server.send(200, "text/plain", "Moving right");
+}
+
+int getIntensity()
+{
+    int intensity = server.arg("value").toInt();
+    return constrain(intensity, 0, 255);
 }
 
 void setLed(int pin, int intensity)
