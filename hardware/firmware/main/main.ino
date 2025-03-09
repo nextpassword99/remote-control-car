@@ -11,6 +11,10 @@ int ledBackward = 12;
 int ledLeft = 4;
 int ledRight = 5;
 
+int motorA_IN1 = 13;
+int motorA_IN2 = 15;
+int motorA_ENA = 14;
+
 void setup()
 {
     Serial.begin(115200);
@@ -20,6 +24,10 @@ void setup()
     pinMode(ledBackward, OUTPUT);
     pinMode(ledRight, OUTPUT);
     pinMode(ledLeft, OUTPUT);
+
+    pinMode(motorA_IN1, OUTPUT);
+    pinMode(motorA_IN2, OUTPUT);
+    pinMode(motorA_ENA, OUTPUT);
 
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -46,6 +54,13 @@ void handleMoveForward()
     int intensity = server.arg("value").toInt();
     ledIntensity(ledForward, intensity);
     ledIntensity(ledBackward, 0);
+
+    int speed = map(intensity, 0, 255, 0, 1023);
+
+    digitalWrite(motorA_IN1, HIGH);
+    digitalWrite(motorA_IN2, LOW);
+    analogWrite(motorA_ENA, speed);
+
     server.send(200, "text/plain", "Moving forward");
 }
 
@@ -54,6 +69,13 @@ void handleMoveBackward()
     int intensity = server.arg("value").toInt();
     ledIntensity(ledBackward, intensity);
     ledIntensity(ledForward, 0);
+
+    int speed = map(intensity, 0, 255, 0, 1023);
+
+    digitalWrite(motorA_IN1, LOW);
+    digitalWrite(motorA_IN2, HIGH);
+    analogWrite(motorA_ENA, speed);
+
     server.send(200, "text/plain", "Moving backward");
 }
 
