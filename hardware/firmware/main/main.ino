@@ -6,14 +6,13 @@ const char *password = "edisonp21";
 
 ESP8266WebServer server(80);
 
-int ledForward = 2;
-int ledBackward = 12;
-int ledLeft = 4;
-int ledRight = 5;
+int motorA_IN1 = 2;
+int motorA_IN2 = 12;
+int motorA_ENA = 4;
 
-int motorA_IN1 = 13;
-int motorA_IN2 = 15;
-int motorA_ENA = 14;
+int motorB_IN1 = 5;
+int motorB_IN2 = 13;
+int motorB_ENA = 14;
 
 void setup()
 {
@@ -45,11 +44,6 @@ void connectionWiFi()
 
 void setupPins()
 {
-    pinMode(ledForward, OUTPUT);
-    pinMode(ledBackward, OUTPUT);
-    pinMode(ledRight, OUTPUT);
-    pinMode(ledLeft, OUTPUT);
-
     pinMode(motorA_IN1, OUTPUT);
     pinMode(motorA_IN2, OUTPUT);
     pinMode(motorA_ENA, OUTPUT);
@@ -70,8 +64,6 @@ void setupWebServer()
 void handleMoveForward()
 {
     int intensity = getIntensity();
-    setLed(ledForward, intensity);
-    setLed(ledBackward, 0);
 
     moveMotorForwardBackward(HIGH, LOW, intensity, false);
 
@@ -81,8 +73,6 @@ void handleMoveForward()
 void handleMoveBackward()
 {
     int intensity = getIntensity();
-    setLed(ledBackward, intensity);
-    setLed(ledForward, 0);
 
     moveMotorForwardBackward(LOW, HIGH, intensity, false);
 
@@ -92,16 +82,14 @@ void handleMoveBackward()
 void handleMoveLeft()
 {
     int intensity = getIntensity();
-    setLed(ledLeft, intensity);
-    setLed(ledRight, 0);
+
     server.send(200, "text/plain", "Moving left");
 }
 
 void handleMoveRight()
 {
     int intensity = getIntensity();
-    setLed(ledRight, intensity);
-    setLed(ledLeft, 0);
+
     server.send(200, "text/plain", "Moving right");
 }
 
