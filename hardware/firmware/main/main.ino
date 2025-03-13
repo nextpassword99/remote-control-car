@@ -8,7 +8,7 @@ ESP8266WebServer server(80);
 
 int motorA_IN1 = 5;
 int motorA_IN2 = 4;
-int motorA_ENA = 2;
+int motorA_ENA = 15;
 
 int motorB_IN1 = 14;
 int motorB_IN2 = 12;
