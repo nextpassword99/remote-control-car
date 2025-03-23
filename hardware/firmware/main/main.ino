@@ -6,13 +6,13 @@ const char *password = "edisonp21";
 
 ESP8266WebServer server(80);
 
-int motorA_IN1 = 5;
-int motorA_IN2 = 4;
-int motorA_ENA = 15;
+int motorA_IN1 = 15;
+int motorA_IN2 = 13;
+int motorA_ENA = 5;
 
 int motorB_IN1 = 14;
 int motorB_IN2 = 12;
-int motorB_ENA = 13;
+int motorB_ENA = 4;
 
 void setup()
 {
@@ -65,7 +65,7 @@ void handleMoveForward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(HIGH, LOW, intensity, false);
+    moveMotorForwardBackward(LOW, HIGH, intensity, false);
 
     server.send(200, "text/plain", "Moving forward");
 }
@@ -74,7 +74,7 @@ void handleMoveBackward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(LOW, HIGH, intensity, false);
+    moveMotorForwardBackward(HIGH, LOW, intensity, false);
 
     server.send(200, "text/plain", "Moving backward");
 }
@@ -106,8 +106,7 @@ void setLed(int pin, int intensity)
 
 void moveMotorForwardBackward(int in1State, int in2State, int speed, bool sides)
 {
-    speed = map(speed, 0, 255, 0, 400); // ? Definir en 400 para mejor control
-
+    speed = map(speed, 0, 255, 0, 1030); // ? Definir en 400 para mejor control
     if (!sides)
     {
         digitalWrite(motorA_IN1, in1State);
