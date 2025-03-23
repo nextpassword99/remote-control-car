@@ -1,9 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
+#include <Servo.h>
 
 const char *ssid = "System32";
 const char *password = "edisonp21";
 
+Servo servo;
 ESP8266WebServer server(80);
 
 int motorA_IN1 = 15;
@@ -13,6 +15,8 @@ int motorA_ENA = 5;
 int motorB_IN1 = 14;
 int motorB_IN2 = 12;
 int motorB_ENA = 4;
+
+int servoPin = 2;
 
 void setup()
 {
@@ -81,14 +85,18 @@ void handleMoveBackward()
 
 void handleMoveLeft()
 {
-    int intensity = getIntensity();
+    int value = getIntensity();
+
+    moveMotorLeftRight(value, false);
 
     server.send(200, "text/plain", "Moving left");
 }
 
 void handleMoveRight()
 {
-    int intensity = getIntensity();
+    int value = getIntensity();
+
+    moveMotorLeftRight(value, true);
 
     server.send(200, "text/plain", "Moving right");
 }
@@ -102,6 +110,20 @@ int getIntensity()
 void setLed(int pin, int intensity)
 {
     analogWrite(pin, intensity);
+}
+
+void moveMotorLeftRight(int value, bool side)
+{
+    int angle;
+    if (!side)
+    {
+        angle = map(value, 0, 250, 90, 0);
+    }
+    else
+    {
+        angle = map(value, 0, 250, 90, 180);
+    }
+    servo.write(angle);
 }
 
 void moveMotorForwardBackward(int in1State, int in2State, int speed, bool sides)
