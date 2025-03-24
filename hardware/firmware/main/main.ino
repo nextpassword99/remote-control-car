@@ -8,9 +8,9 @@ const char *password = "edisonp21";
 Servo servo;
 ESP8266WebServer server(80);
 
-int motorA_IN1 = 14;
-int motorA_IN2 = 12;
-int motorA_ENA = 5;
+int motorA_IN1 = 5;
+int motorA_IN2 = 4;
+int motorA_ENA = 0;
 
 int servoPin = 2;
 
@@ -62,7 +62,7 @@ void handleMoveForward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(LOW, HIGH, intensity);
+    moveMotorForwardBackward(HIGH, LOW, intensity);
 
     server.send(200, "text/plain", "Moving forward");
 }
@@ -71,7 +71,7 @@ void handleMoveBackward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(HIGH, LOW, intensity);
+    moveMotorForwardBackward(LOW, HIGH, intensity);
 
     server.send(200, "text/plain", "Moving backward");
 }
