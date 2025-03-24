@@ -8,13 +8,9 @@ const char *password = "edisonp21";
 Servo servo;
 ESP8266WebServer server(80);
 
-int motorA_IN1 = 15;
-int motorA_IN2 = 13;
+int motorA_IN1 = 14;
+int motorA_IN2 = 12;
 int motorA_ENA = 5;
-
-int motorB_IN1 = 14;
-int motorB_IN2 = 12;
-int motorB_ENA = 4;
 
 int servoPin = 2;
 
@@ -25,6 +21,7 @@ void setup()
 
     setupPins();
     setupWebServer();
+    servo.attach(servoPin);
 
     server.begin();
 }
@@ -51,10 +48,6 @@ void setupPins()
     pinMode(motorA_IN1, OUTPUT);
     pinMode(motorA_IN2, OUTPUT);
     pinMode(motorA_ENA, OUTPUT);
-
-    pinMode(motorB_IN1, OUTPUT);
-    pinMode(motorB_IN2, OUTPUT);
-    pinMode(motorB_ENA, OUTPUT);
 }
 
 void setupWebServer()
@@ -69,7 +62,7 @@ void handleMoveForward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(LOW, HIGH, intensity, false);
+    moveMotorForwardBackward(LOW, HIGH, intensity);
 
     server.send(200, "text/plain", "Moving forward");
 }
@@ -78,7 +71,7 @@ void handleMoveBackward()
 {
     int intensity = getIntensity();
 
-    moveMotorForwardBackward(HIGH, LOW, intensity, false);
+    moveMotorForwardBackward(HIGH, LOW, intensity);
 
     server.send(200, "text/plain", "Moving backward");
 }
@@ -126,17 +119,10 @@ void moveMotorLeftRight(int value, bool side)
     servo.write(angle);
 }
 
-void moveMotorForwardBackward(int in1State, int in2State, int speed, bool sides)
+void moveMotorForwardBackward(int in1State, int in2State, int speed)
 {
-    speed = map(speed, 0, 255, 0, 1030); // ? Definir en 400 para mejor control
-    if (!sides)
-    {
-        digitalWrite(motorA_IN1, in1State);
-        digitalWrite(motorA_IN2, in2State);
-        analogWrite(motorA_ENA, speed);
-
-        digitalWrite(motorB_IN1, in1State);
-        digitalWrite(motorB_IN2, in2State);
-        analogWrite(motorB_ENA, speed);
-    }
+    speed = map(speed, 0, 255, 0, 1023); // ? Definir en 400 para mejor control
+    digitalWrite(motorA_IN1, in1State);
+    digitalWrite(motorA_IN2, in2State);
+    analogWrite(motorA_ENA, speed);
 }
