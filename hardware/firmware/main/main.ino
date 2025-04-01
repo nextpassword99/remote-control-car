@@ -1,12 +1,12 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WebServer.h>
+#include <WebSocketsServer.h>
 #include <Servo.h>
 
 const char *ssid = "System32";
 const char *password = "edisonp21";
 
 Servo servo;
-ESP8266WebServer server(80);
+WebSocketsServer webSocket(81);
 
 int motorA_IN1 = 5;
 int motorA_IN2 = 4;
@@ -17,30 +17,23 @@ int servoPin = 2;
 void setup()
 {
     Serial.begin(115200);
-    connectionWiFi();
-
-    setupPins();
-    setupWebServer();
-    servo.attach(servoPin);
-
-    server.begin();
-}
-
-void loop()
-{
-    server.handleClient();
-}
-
-void connectionWiFi()
-{
     WiFi.begin(ssid, password);
-
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(1000);
         Serial.print(".");
     }
     Serial.println(WiFi.localIP());
+
+    setupPins();
+    servo.attach(servoPin);
+    webSocket.begin();
+    webSocket.onEvent(webSocketEvent);
+}
+
+void loop()
+{
+    webSocket.loop();
 }
 
 void setupPins()
@@ -50,78 +43,49 @@ void setupPins()
     pinMode(motorA_ENA, OUTPUT);
 }
 
-void setupWebServer()
+void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
 {
-    server.on("/forward", HTTP_GET, handleMoveForward);
-    server.on("/backward", HTTP_GET, handleMoveBackward);
-    server.on("/left", HTTP_GET, handleMoveLeft);
-    server.on("/right", HTTP_GET, handleMoveRight);
+    if (type == WStype_TEXT)
+    {
+        String command = String((char *)payload);
+        if (command.startsWith("forward"))
+        {
+            int intensity = getIntensity(command);
+            moveMotorForwardBackward(HIGH, LOW, intensity);
+        }
+        else if (command.startsWith("backward"))
+        {
+            int intensity = getIntensity(command);
+            moveMotorForwardBackward(LOW, HIGH, intensity);
+        }
+        else if (command.startsWith("left"))
+        {
+            int value = getIntensity(command);
+            moveMotorLeftRight(value, false);
+        }
+        else if (command.startsWith("right"))
+        {
+            int value = getIntensity(command);
+            moveMotorLeftRight(value, true);
+        }
+    }
 }
 
-void handleMoveForward()
+int getIntensity(String command)
 {
-    int intensity = getIntensity();
-
-    moveMotorForwardBackward(HIGH, LOW, intensity);
-
-    server.send(200, "text/plain", "Moving forward");
-}
-
-void handleMoveBackward()
-{
-    int intensity = getIntensity();
-
-    moveMotorForwardBackward(LOW, HIGH, intensity);
-
-    server.send(200, "text/plain", "Moving backward");
-}
-
-void handleMoveLeft()
-{
-    int value = getIntensity();
-
-    moveMotorLeftRight(value, false);
-
-    server.send(200, "text/plain", "Moving left");
-}
-
-void handleMoveRight()
-{
-    int value = getIntensity();
-
-    moveMotorLeftRight(value, true);
-
-    server.send(200, "text/plain", "Moving right");
-}
-
-int getIntensity()
-{
-    int intensity = server.arg("value").toInt();
-    return constrain(intensity, 0, 255);
-}
-
-void setLed(int pin, int intensity)
-{
-    analogWrite(pin, intensity);
+    int value = command.substring(command.indexOf(" ") + 1).toInt();
+    return constrain(value, 0, 255);
 }
 
 void moveMotorLeftRight(int value, bool side)
 {
-    int angle;
-    if (!side)
-    {
-        angle = map(value, 0, 250, 90, 0);
-    }
-    else
-    {
-        angle = map(value, 0, 250, 90, 180);
-    }
+    int angle = side ? map(value, 0, 250, 90, 180) : map(value, 0, 250, 90, 0);
     servo.write(angle);
 }
 
 void moveMotorForwardBackward(int in1State, int in2State, int speed)
 {
-    speed = map(speed, 0, 255, 0, 1023); // ? Definir en 400 para mejor control
+    speed = map(speed, 0, 255, 0, 1023);
     digitalWrite(motorA_IN1, in1State);
     digitalWrite(motorA_IN2, in2State);
     analogWrite(motorA_ENA, speed);
